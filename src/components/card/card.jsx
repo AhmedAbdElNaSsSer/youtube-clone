@@ -9,11 +9,13 @@ import { Link } from "react-router-dom";
 
 const CustomTypography = styled(Link)(({ theme }) => ({
   color: "#c8c7c7",
+  fontSize:13
 }));
 
 const CustomLink = styled(Link)(({ theme }) => ({
   color: "#fff",
   fontWeight: "bold",
+  fontSize:13
 }));
 
 const CardItem = ({ record, id, isAvatar }) => {

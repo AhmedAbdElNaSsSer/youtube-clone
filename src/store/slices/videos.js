@@ -11,9 +11,10 @@ const rejectedHandler = (state, action) => {
 
 const initialState = {
   record: [],
+  trendingVideos:[],
+  search:[],
   singleRecord: null,
   videoComments: null,
-  trendingVideos:[],
   loader: false,
   error: null,
 }
@@ -113,6 +114,26 @@ export const getTrendingVideos = createAsyncThunk(
   }
 )
 
+export const getSearchedVideos =createAsyncThunk('videos/getSearchedVideos', async (search, thunkApi) => {
+  
+  const { rejectWithValue } = thunkApi
+  const searchOptions = {
+    method: 'GET',
+    url: 'https://yt-api.p.rapidapi.com/search',
+    params: {query: search},
+    headers: {
+      'X-RapidAPI-Key': '9c2eb668cbmsh819f1f5857f2938p19b7a2jsn7933ca98d5ae',
+      'X-RapidAPI-Host': 'yt-api.p.rapidapi.com'
+    }
+  };
+  try {
+    const response = await axios.request(searchOptions)
+    return response.data
+  } catch (error) {
+    return rejectWithValue(error.message)
+  }
+})
+
 export const videoSlice = createSlice({
   name: "videos",
   initialState,
@@ -147,6 +168,13 @@ export const videoSlice = createSlice({
       state.trendingVideos = action.payload
     })
     .addCase(getTrendingVideos.rejected, rejectedHandler)
+    // SearchedVideos Comments
+    .addCase(getSearchedVideos.pending, pendingHandler)
+    .addCase(getSearchedVideos.fulfilled, (state, action) => {
+      state.loader = false
+      state.search = action.payload.data
+    })
+    .addCase(getSearchedVideos.rejected, rejectedHandler)
   },
 })
 

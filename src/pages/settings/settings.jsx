@@ -1,3 +1,5 @@
+import { Loader } from "../../components/loader/loader";
+
 export default function Settings() {
-    return <h1>hello from settings</h1>;
+    return <Loader/>;
 }

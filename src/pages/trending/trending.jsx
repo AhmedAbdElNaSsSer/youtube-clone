@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { getTrendingVideos } from "../../store/slices/videos";
 import TrendingCard from "../../components/card/trendingCard";
+import { Loader } from "../../components/loader/loader";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: "transparent",
@@ -18,7 +19,7 @@ const Item = styled(Paper)(({ theme }) => ({
 export default function Home() {
   const dispatch = useDispatch();
   const {
-    trendingVideos: { data },
+    trendingVideos: { data }, loader
   } = useSelector((state) => state.videoSlice);
   useEffect(() => {
     dispatch(getTrendingVideos());
@@ -32,7 +33,7 @@ export default function Home() {
       </Grid>
     );
   });
-  return (
+  return loader ? <Loader /> : (
     <Box sx={{ flexGrow: 1 }}>
       <Grid container spacing={2}>
         {Cards}

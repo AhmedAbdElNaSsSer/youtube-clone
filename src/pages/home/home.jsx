@@ -4,10 +4,11 @@ import CardItem from "../../components/card/card";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { getVideos } from "../../store/slices/videos";
+import { Loader } from "../../components/loader/loader";
 
 export default function Home() {
   const dispatch = useDispatch();
-  const { record } = useSelector((state) => state.videoSlice);
+  const { record, loader } = useSelector((state) => state.videoSlice);
   useEffect(() => {
     dispatch(getVideos());
   }, [dispatch]);
@@ -19,7 +20,7 @@ export default function Home() {
       </Grid>
     );
   });
-  return (
+  return loader ? <Loader/> : (
     <Box sx={{ flexGrow: 1 }}>
       <Grid container spacing={2}>
         {Cards}

@@ -17,8 +17,7 @@ import SettingsIcon from "@mui/icons-material/SettingsOutlined";
 import VideoLibraryIcon from "@mui/icons-material/VideoLibraryOutlined";
 import HomeRoundedIcon from "@mui/icons-material/HomeOutlined";
 import MailIcon from "@mui/icons-material/Mail";
-import SearchIcon from "@mui/icons-material/Search";
-import InputBase from "@mui/material/InputBase";
+
 import Badge from "@mui/material/Badge";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
@@ -31,7 +30,10 @@ import "./main.css";
 import LogoImg from "../components/logo/logo";
 import ButtonItem from "../components/button/button";
 import UploadIcon from "@mui/icons-material/Upload";
-import TrendingUpIcon from '@mui/icons-material/TrendingUp';
+import TrendingUpIcon from "@mui/icons-material/TrendingUp";
+import { SearchItem } from "../components/search/search";
+import { useSelector } from "react-redux";
+import { SearchPage } from "../pages/search/searchPage";
 const drawerWidth = 240;
 
 const openedMixin = (theme) => ({
@@ -63,7 +65,6 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   // necessary for content to be below app bar
   ...theme.mixins.toolbar,
 }));
-
 
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== "open",
@@ -103,56 +104,12 @@ const Drawer = styled(MuiDrawer, {
   }),
 }));
 
-const Search = styled("div")(({ theme }) => ({
-  position: "relative",
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: alpha(theme.palette.common.white, 0.15),
-  "&:hover": {
-    backgroundColor: alpha(theme.palette.common.white, 0.25),
-  },
-  marginRight: theme.spacing(0),
-  marginLeft: 0,
-  width: "100%",
-  [theme.breakpoints.up("sm")]: {
-    marginLeft: theme.spacing(3),
-    width: "auto",
-  },
-}));
-
-const SearchIconWrapper = styled("div")(({ theme }) => ({
-  padding: theme.spacing(0, 2),
-  height: "100%",
-  position: "absolute",
-  pointerEvents: "none",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-}));
-
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: "inherit",
-  "& .MuiInputBase-input": {
-    padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-    transition: theme.transitions.create("width"),
-    width: "100%",
-    [theme.breakpoints.up("md")]: {
-      width: "20ch",
-    },
-  },
-}));
-
-const InputSearch = styled(Search)(({ theme }) => ({
-  borderRadius: "20px",
-  background: "#2a3144",
-  width: "50% !important",
-}));
 export default function MainLayout({ children }) {
   const theme = useTheme();
   const [open, setOpen] = React.useState(true);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+  const { search } = useSelector((state) => state.videoSlice);
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -273,23 +230,7 @@ export default function MainLayout({ children }) {
           >
             <MenuIcon />
           </IconButton>
-          <ButtonItem
-            text="Upload"
-            variant="outlined"
-            color="primary"
-            size="medium"
-            sx={{mx:1}}
-            startIcon={<UploadIcon />}
-          />
-          <InputSearch>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="Search…"
-              inputProps={{ "aria-label": "search" }}
-            />
-          </InputSearch>
+          <SearchItem />
           <Box sx={{ flexGrow: 0 }} />
           <Box sx={{ display: { xs: "none", md: "flex" } }}>
             <IconButton
@@ -338,11 +279,15 @@ export default function MainLayout({ children }) {
       </AppBar>
       {renderMobileMenu}
       {renderMenu}
-      <Drawer variant="permanent" open={open} sx={{
-        "& .MuiDrawer-paper": {
-          backgroundColor:'#1e2337'
-        },
-      }}>
+      <Drawer
+        variant="permanent"
+        open={open}
+        sx={{
+          "& .MuiDrawer-paper": {
+            backgroundColor: "#1e2337",
+          },
+        }}
+      >
         <DrawerHeader
           sx={{ color: "#d5d5d5", justifyContent: "start", padding: "15px" }}
         >
@@ -480,7 +425,7 @@ export default function MainLayout({ children }) {
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
-        {children}
+        {search?.length > 0 ? <SearchPage /> : children}
       </Box>
     </Box>
   );

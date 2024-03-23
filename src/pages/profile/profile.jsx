@@ -13,6 +13,7 @@ import { useParams } from "react-router-dom";
 import Carousel from "../../components/carousel/carousel";
 import Button from "../../components/button/button";
 import styled from "@emotion/styled";
+import { Loader } from "../../components/loader/loader";
 
 const CustomTypography = styled(Typography)(({ theme }) => ({
   color: "#fff",
@@ -26,7 +27,8 @@ export default function Profile() {
   useEffect(() => {
     dispatch(getChannelHome(id));
   }, [dispatch, id]);
-  const { channelHome } = useSelector((state) => state.channelSlice);
+  const { channelHome,loader } = useSelector((state) => state.channelSlice);
+  
   if (!channelHome) {
     return null;
   }
@@ -42,12 +44,15 @@ export default function Profile() {
       return (
         <Box key={i}>
           <CustomTypography variant="h5">{single.title}</CustomTypography>
-          <Carousel record={single.data} isShort={single.title === 'Short' && true} />
+          <Carousel
+            record={single.data}
+            isShort={single.title === "Short" && true}
+          />
         </Box>
       );
     });
   };
-  return (
+  return  loader ? <Loader /> : (
     <>
       <Container>
         {/* Cover */}
@@ -56,7 +61,10 @@ export default function Profile() {
             <img
               width="100%"
               height={300}
-              src={channelHome?.meta?.banner[channelHome?.meta?.banner.length-1]?.url}
+              src={
+                channelHome?.meta?.banner[channelHome?.meta?.banner.length - 1]
+                  ?.url
+              }
               alt=""
               style={{ borderRadius: 15 }}
             />
@@ -69,7 +77,6 @@ export default function Profile() {
               alt={channelHome?.meta?.title}
               elevation="5"
               sx={{ width: "100px", height: "100px", margin: "auto" }}
-              
             />
           </Box>
           <Box p={2}>
@@ -80,7 +87,7 @@ export default function Profile() {
             {/* Channel Subscription Number */}
             <Typography variant="p" color="#ffffffa1" display="block">
               {channelHome?.meta?.subscriberCountText} |{" "}
-              {channelHome?.meta?.videosCountText+'Videos'}
+              {channelHome?.meta?.videosCountText + "Videos"}
             </Typography>
             {/* Channel Subscription Number */}
             <Typography variant="p" color="#ffffffa1" display="block">
@@ -106,5 +113,4 @@ export default function Profile() {
       </Container>
     </>
   );
-  
 }
