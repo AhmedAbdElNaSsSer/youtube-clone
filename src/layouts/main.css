@@ -1,0 +1,23 @@
+.MuiList-root a.active li, .MuiList-root a.active li svg{
+    color: #ff372f !important;
+    position: relative;
+}
+.MuiList-root a.active li::after {
+    content: '';
+    background-color: #ff372f;
+    width: 3px;
+    height: 50%;
+    position: absolute;
+    top: 50%;
+    right: 0;
+    border-top-left-radius: 15px;
+    border-bottom-left-radius: 15px;
+    transform: translate(0%, -50%);
+    -webkit-transform: translate(0%, -50%);
+    -moz-transform: translate(0%, -50%);
+    -ms-transform: translate(0%, -50%);
+    -o-transform: translate(0%, -50%);
+}
+/* .MuiDrawer-paper {
+    background-color: #1e2337 !important;
+} */
